@@ -2,8 +2,8 @@ const { Telegraf } = require("telegraf");
 const User = require("./models/User");
 const { createToken } = require("./tgTokens");
 
-const MINI_APP_URL = () => process.env.MINI_APP_URL || "https://requrilish.vercel.app/";
-const OPERATOR_PHONES = ["331350206"];
+const MINI_APP_URL = () => process.env.MINI_APP_URL || "https://renarx.vercel.app/";
+const OPERATOR_PHONES = (process.env.OPERATOR_PHONES || "331350206").split(",").map(p => p.trim());
 
 let bot = null;
 
@@ -25,7 +25,7 @@ function getBot() {
             {
               reply_markup: {
                 inline_keyboard: [[
-                  { text: "🏗 ReQurilish'ga kirish", web_app: { url: appUrl } },
+                  { text: "🏗 ReNarx'ga kirish", web_app: { url: appUrl } },
                 ]],
               },
             }
@@ -34,7 +34,7 @@ function getBot() {
       } catch { /* silent */ }
 
       ctx.reply(
-        `Salom! 👋 *ReQurilish*'ga xush kelibsiz!\n\nQurilish materiallari bozori.\n\nKirish uchun telefon raqamingizni yuboring:`,
+        `Salom! 👋 *ReNarx*'ga xush kelibsiz!\n\nQurilish materiallari bozori.\n\nKirish uchun telefon raqamingizni yuboring:`,
         {
           parse_mode: "Markdown",
           reply_markup: {
@@ -94,7 +94,7 @@ function getBot() {
           parse_mode: "Markdown",
           reply_markup: {
             inline_keyboard: [
-              [{ text: "🏗 ReQurilish'ga kirish", web_app: { url: appUrl } }],
+              [{ text: "🏗 ReNarx'ga kirish", web_app: { url: appUrl } }],
             ],
           },
         });
@@ -107,22 +107,67 @@ function getBot() {
       }
     });
 
+    bot.command("catalog", async (ctx) => {
+      const appUrl = MINI_APP_URL();
+      ctx.reply(
+        `🛒 *ReNarx — Qurilish materiallari katalogi*\n\nBarcha mahsulotlarni ko'rish uchun quyidagi tugmani bosing:`,
+        {
+          parse_mode: "Markdown",
+          reply_markup: {
+            inline_keyboard: [[
+              { text: "📦 Katalogni ochish", web_app: { url: appUrl } },
+            ]],
+          },
+        }
+      );
+    });
+
+    bot.command("products", async (ctx) => {
+      try {
+        const Product = require("./models/Product");
+        const items = await Product.find({ status: "active" });
+        if (!items.length) return ctx.reply("Hozircha mahsulotlar yo'q.");
+        const lines = items.slice(0, 10).map(p => {
+          const price = Number(p.price_1 || p.price || 0).toLocaleString("uz-UZ");
+          const dims = [p.dim_x, p.dim_y, p.dim_z].filter(Boolean).join("×");
+          return `• *${p.name}* — ${price} so'm${dims ? ` (${dims}mm)` : ""} | ${p.viloyat}`;
+        });
+        const total = items.length;
+        const appUrl = MINI_APP_URL();
+        ctx.reply(
+          `📦 *Mahsulotlar (${total} ta)*\n\n${lines.join("\n")}${total > 10 ? "\n\n_...va boshqalar_" : ""}\n\n👇 Barchasini ko'rish:`,
+          {
+            parse_mode: "Markdown",
+            reply_markup: {
+              inline_keyboard: [[
+                { text: "🛒 Barcha mahsulotlar", web_app: { url: appUrl } },
+              ]],
+            },
+          }
+        );
+      } catch (e) {
+        ctx.reply("Mahsulotlarni yuklashda xato yuz berdi.");
+      }
+    });
+
     bot.command("id", (ctx) => {
       ctx.reply(`🆔 Sizning Telegram ID: \`${ctx.from.id}\``, { parse_mode: "Markdown" });
     });
 
     bot.command("help", (ctx) => {
       ctx.reply(
-        `📖 *ReQurilish Bot yordam*\n\n` +
+        `📖 *ReNarx Bot yordam*\n\n` +
         `/start — Botni boshlash, kirish havolasi\n` +
+        `/catalog — Mahsulotlar katalogini ochish\n` +
+        `/products — Mahsulotlar ro'yxati\n` +
         `/id — Telegram ID ni ko'rish\n\n` +
-        `❓ Muammo bo'lsa: @Requrilish_admin ga murojaat qiling`,
+        `❓ Muammo bo'lsa: @ReNarx_admin ga murojaat qiling`,
         { parse_mode: "Markdown" }
       );
     });
 
     bot.launch()
-      .then(() => console.log("🤖 ReQurilish bot ishga tushdi (polling rejim)"))
+      .then(() => console.log("🤖 ReNarx bot ishga tushdi (polling rejim)"))
       .catch(err => {
         console.error("❌ Bot launch xatosi:", err.message);
         if (err.message.includes("401")) {

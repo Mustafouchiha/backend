@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: requrilish-api
+    name: renarx-api
     env: node
     buildCommand: npm install --omit=dev
     startCommand: npm start
@@ -21,12 +21,12 @@ services:
       - key: OTP_STRICT
         value: false
       - key: CLIENT_URL
-        value: https://requrilish.vercel.app
+        value: https://renarx.vercel.app
       - key: MINI_APP_URL
-        value: https://requrilish.vercel.app/
-      - key: OPERATOR_CARD
-        value: "9860160619731286"
+        value: https://renarx.vercel.app/
+      - key: OPERATOR_PHONES
+        value: "331350206"
       - key: OPERATOR_NAME
         value: "Ismoiljonov Mustafo"
       - key: OPERATOR_TELEGRAM
-        value: "@Requrilish_admin"
+        value: "@ReNarx_admin"
