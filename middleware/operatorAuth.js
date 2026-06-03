@@ -3,9 +3,8 @@ const { query } = require("../db");
 
 const JWT_SECRET = process.env.JWT_SECRET || "remarket_secret_key_2024";
 
-// Operator telefon va telegram ro'yxati
-const OPERATOR_PHONES    = ["331350206"];
-const OPERATOR_TELEGRAMS = ["@Requrilish_admin", "@requrilish_admin"];
+const OPERATOR_PHONES    = (process.env.OPERATOR_PHONES || "331350206").split(",").map(p => p.trim());
+const OPERATOR_TELEGRAMS = ["@ReNarx_admin", "@renarx_admin"];
 
 module.exports = async function operatorAuth(req, res, next) {
   const authHeader = req.headers.authorization;
