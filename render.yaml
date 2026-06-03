@@ -11,7 +11,7 @@ services:
       - key: PORT
         value: 5000
       - key: DATABASE_URL
-        value: postgresql://neondb_owner:npg_PXiYo4fUI9JH@ep-autumn-field-a9gjr37i-pooler.gwc.azure.neon.tech/neondb?sslmode=require
+        value: postgresql://neondb_owner:npg_hW6Qox8usLeE@ep-autumn-haze-apc6ffel-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require
       - key: JWT_SECRET
         value: 10000000
       - key: SMS_ENABLED
