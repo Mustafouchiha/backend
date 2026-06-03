@@ -4,8 +4,6 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const productRoutes = require("./routes/products");
 const offerRoutes = require("./routes/offers");
-const paymentRoutes = require("./routes/payments");
-const walletRoutes = require("./routes/wallet");
 const operatorRoutes = require("./routes/operator");
 
 const app = express();
@@ -51,8 +49,6 @@ if (process.env.NODE_ENV !== "production") {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/offers", offerRoutes);
-app.use("/api/payments", paymentRoutes);
-app.use("/api/wallet", walletRoutes);
 app.use("/api/operator", operatorRoutes);
 
 // ── Ping: Render + Neon ni uyg'otadi ─────────────────────────────
